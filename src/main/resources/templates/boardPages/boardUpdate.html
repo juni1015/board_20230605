@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <th:block th:replace="component/config :: config"></th:block>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+<h2>글수정</h2>
+<form action="/board/update" method="post">
+  <input type="text" name="boardWriter" placeholder="작성자 입력"> <br>
+  <input type="text" name="boardTitle" placeholder="제목 입력"> <br>
+  <input type="text" name="boardPass" placeholder="비밀번호 입력"> <br>
+  <input type="text" name="boardContents" placeholder="내용 입력"> <br>
+  <input type="submit" value="작성">
+</form>
+<div th:replace="component/footer :: footer"></div>
+</body>
+</html>

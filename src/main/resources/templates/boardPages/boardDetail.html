@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="component/config :: config"></th:block>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+<h2>리스트</h2>
+<table>
+    <tr>
+        <th>id</th>
+        <td th:text="${board.id}"></td>
+    </tr>
+    <tr>
+        <th>writer</th>
+        <td th:text="${board.boardWriter}"></td>
+    </tr>
+    <tr>
+        <th>title</th>
+        <td th:text="${board.boardTitle}"></td>
+    </tr>
+    <tr>
+        <th>pass</th>
+        <td th:text="${board.boardPass}"></td>
+    </tr>
+    <tr>
+        <th>contents</th>
+        <td th:text="${board.boardContents}"></td>
+    </tr>
+    <tr>
+        <th>hits</th>
+        <td th:text="${board.boardHits}"></td>
+    </tr>
+</table>
+<button th:onclick="board_list()">목록</button>
+<button id="board-update">수정</button>
+<button id="board-delete">삭제</button>
+<div id="check-area">
+
+</div>
+<!--<button th:onclick="board_delete([[${board.id}]]">삭제</button>-->
+<div th:replace="component/footer :: footer"></div>
+</body>
+<script>
+    const boardUpdate = document.getElementById("board-update");
+    const boardDelete = document.getElementById("board-delete");
+    let clickedButtonId = null; // 클릭된 버튼의 id를 저장할 전역 변수
+
+    const password_check = () => {
+        const checkArea = document.getElementById("check-area");
+
+        let output = "<input type='text' name='boardPass' placeholder='비밀번호 입력'>";
+        output += "<button onclick='password()'>확인</button>";
+        checkArea.innerHTML = output;
+    }
+
+    const password = () => {
+        const passDB = [[${board.boardPass}]];
+        const id = [[${board.id}]];
+        const password = document.querySelector('input[name="boardPass"]').value;
+
+        if (password == passDB) {
+            alert("확인 완료");
+            if (clickedButtonId === "board-update") {
+                alert("수정버튼");
+                location.href = "/board/update/" + id;
+            } else if (clickedButtonId === "board-delete") {
+                alert("삭제버튼")
+                location.href = "/board/delete/" + id;
+            }
+        } else {
+            alert("비밀번호 확인필요");
+        }
+    }
+
+    boardUpdate.addEventListener("click", () => {
+        clickedButtonId = "board-update"; // 수정 버튼이 클릭됨을 저장
+        password_check();
+    });
+
+    boardDelete.addEventListener("click", () => {
+        clickedButtonId = "board-delete"; // 삭제 버튼이 클릭됨을 저장
+        password_check();
+    });
+
+
+</script>
+</html>
