@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="component/config :: config"></th:block>
 </head>
@@ -8,11 +8,13 @@
 <div th:replace="component/nav :: nav"></div>
 <h2>글수정</h2>
 <form action="/board/update" method="post">
-  <input type="text" name="boardWriter" placeholder="작성자 입력"> <br>
-  <input type="text" name="boardTitle" placeholder="제목 입력"> <br>
-  <input type="text" name="boardPass" placeholder="비밀번호 입력"> <br>
-  <input type="text" name="boardContents" placeholder="내용 입력"> <br>
-  <input type="submit" value="작성">
+  <input type="hidden" name="id" th:value="${board.id}"> <br>
+  <input type="text" name="boardWriter" placeholder="작성자 입력" th:value="${board.boardWriter}"> <br>
+  <input type="text" name="boardTitle" placeholder="제목 입력" th:value="${board.boardTitle}"> <br>
+  <input type="text" name="boardPass" placeholder="비밀번호 입력" th:value="${board.boardPass}"> <br>
+  <input type="text" name="boardContents" placeholder="내용 입력" th:value="${board.boardContents}"> <br>
+  <input type="hidden" name="boardHits" th:value="${board.boardHits}">
+  <input type="submit" value="수정">
 </form>
 <div th:replace="component/footer :: footer"></div>
 </body>
