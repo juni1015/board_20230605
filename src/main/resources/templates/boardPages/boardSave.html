@@ -7,11 +7,12 @@
 <div th:replace="component/header :: header"></div>
 <div th:replace="component/nav :: nav"></div>
 <h2>글작성</h2>
-<form action="/board/save" method="post">
+<form action="/board/save" method="post" enctype="multipart/form-data">
   <input type="text" name="boardWriter" placeholder="작성자 입력"> <br>
   <input type="text" name="boardTitle" placeholder="제목 입력"> <br>
   <input type="text" name="boardPass" placeholder="비밀번호 입력"> <br>
   <input type="text" name="boardContents" placeholder="내용 입력"> <br>
+  <input type="file" name="boardFile" class="form-control">
   <input type="submit" value="작성">
 </form>
 <div th:replace="component/footer :: footer"></div>
