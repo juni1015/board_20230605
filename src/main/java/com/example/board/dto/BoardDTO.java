@@ -2,6 +2,7 @@ package com.example.board.dto;
 
 import com.example.board.entity.BoardEntity;
 import com.example.board.entity.BoardFileEntity;
+import com.example.board.util.UtilClass;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +22,7 @@ public class BoardDTO {
     private String boardTitle;
     private String boardPass;
     private String boardContents;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private int boardHits;
 
     private List<MultipartFile> boardFile;
@@ -38,6 +39,7 @@ public class BoardDTO {
         boardDTO.setBoardPass(boardEntity.getBoardPass());
         boardDTO.setBoardContents(boardEntity.getBoardContents());
         boardDTO.setBoardHits(boardEntity.getBoardHits());
+        boardDTO.setCreatedAt(UtilClass.dateFormat(boardEntity.getCreatedAt()));
 
         // 파일 여부에 따른 코드 추가
         if (boardEntity.getFileAttached() == 1) {

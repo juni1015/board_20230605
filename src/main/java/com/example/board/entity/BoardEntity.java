@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "board_table")
-public class BoardEntity {
+public class BoardEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,15 +34,18 @@ public class BoardEntity {
     @Column
     private int boardHits;
 
-    @CreationTimestamp
-    @Column(updatable = false)  // updatable = false이기 때문에 업데이트 진행하지 않아도 됨
-    private LocalDateTime createdAt;
+//    @CreationTimestamp
+//    @Column(updatable = false)  // updatable = false이기 때문에 업데이트 진행하지 않아도 됨
+//    private LocalDateTime createdAt;
 
     @Column
     private int fileAttached;
 
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)    // 부모에는 OneToMany
     private List<BoardFileEntity> boardFileEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)    // 부모에는 OneToMany
+    private List<CommentEntity> commentEntityList = new ArrayList<>();
 
     public static BoardEntity toSaveEntity(BoardDTO boardDTO) {
         BoardEntity boardEntity = new BoardEntity();

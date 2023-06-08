@@ -18,7 +18,7 @@
     </tr>
     <tr>
         <th>date</th>
-        <td th:text="*{#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${board.createdAt}"></td>
     </tr>
     <tr>
         <th>title</th>
@@ -49,10 +49,102 @@
 <div id="check-area">
 
 </div>
-<!--<button th:onclick="board_delete([[${board.id}]]">삭제</button>-->
+
+<div class="container" id="comment-write">
+    <input type="text" id="comment-writer" placeholder="작성자">
+    <input type="text" id="comment-contents" placeholder="내용">
+    <button th:onclick="comment_write()">댓글 작성</button>
+</div>
+<div class="container" id="comment-list">
+    <div th:if="${commentList == null}">
+        <p>작성된 댓글이 없습니다.</p>
+    </div>
+    <div th:unless="${commentList == null}">
+        <table class="table">
+            <tr>
+                <th>id</th>
+                <th>writer</th>
+                <th>contents</th>
+                <th>date</th>
+            </tr>
+            <tr th:each="comment: ${commentList}">
+                <td th:text="${comment.id}"></td>
+                <td th:text="${comment.commentWriter}"></td>
+                <td th:text="${comment.commentContents}"></td>
+                <td th:text="${comment.createdAt}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
 <div th:replace="component/footer :: footer"></div>
 </body>
-<script>
+<script th:inline="javascript">
+    const comment_list = (commentList) => {
+        console.log("댓글 목록 함수", commentList);
+        const resultArea = document.querySelector("#comment-list");
+        let output = "<table>\n" +
+            "        <tr>\n" +
+            "            <th>id</th>\n" +
+            "            <th>작성자</th>\n" +
+            "            <th>내용</th>\n" +
+            "            <th>작성시간</th>\n" +
+            "        </tr>";
+        for (let i in commentList) {
+            output += "\n" +
+                "        <tr>\n" +
+                "            <td>" + commentList[i].id + "</td>\n" +
+                "            <td>" + commentList[i].commentWriter + "</td>\n" +
+                "            <td>" + commentList[i].commentContents + "</td>\n" +
+                "            <td>" + commentList[i].createdAt + "</td>\n" +
+                "        </tr>";
+        }
+        output += "</table>";
+        resultArea.innerHTML = output;
+    }
+
+    const comment_write = () => {
+        const writer = document.querySelector("#comment-writer").value;
+        const contents = document.querySelector("#comment-contents").value;
+        const boardId = [[${board.id}]];
+
+        axios({
+            method: "post",
+            url: "/comment/save",
+            data: {
+                commentWriter: writer,
+                commentContents: contents,
+                boardId: boardId
+            }
+        }).then(res => {
+            console.log("res", res);
+            console.log("댓글 목록", res.data);
+            document.querySelector("#comment-writer").value = "";
+            document.querySelector("#comment-contents").value = "";
+            comment_list(res.data);
+            // let output = "<table>";
+            // output += "<tr>";
+            // output += "<th>id</th>";
+            // output += "<th>작성자</th>";
+            // output += "<th>내용</th>";
+            // output += "<th>작성시간</th>";
+            // output += "</tr>";
+            // for (let i in res) {
+            //     output += "<tr>";
+            //     output += "<td>" + res[i].id + "</td>";
+            //     output += "<td>" + res[i].commentWriter + "</td>";
+            //     output += "<td>" + res[i].commentContents + "</td>";
+            //     output += "<td>" + res[i].createdAt + "</td>";
+            //     output += "</tr>";
+            // }
+            // output += "</table>";
+            // result.innerHTML = output;
+            // document.getElementById("comment-write").value = "";
+            // document.getElementById("comment-contents").value = "";
+        }).catch(err => {
+            console.log("err", err);
+        });
+    }
+
     const boardUpdate = document.getElementById("board-update");
     const boardDelete = document.getElementById("board-delete");
     let clickedButtonId = null; // 클릭된 버튼의 id를 저장할 전역 변수
@@ -97,6 +189,5 @@
     const board_list = () => {
       location.href = "/board/";
     }
-
 </script>
 </html>
